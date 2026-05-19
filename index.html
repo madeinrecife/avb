@@ -25,7 +25,7 @@
             color: #1e2f4d;
         }
         .app-container {
-            max-width: 1300px;
+            max-width: 1400px;
             width: 100%;
             margin: 0 auto;
             background: rgba(255,255,255,0.75);
@@ -33,13 +33,6 @@
             border-radius: 48px;
             box-shadow: 0 30px 60px -20px rgba(11,59,92,0.4), 0 0 0 1px rgba(255,255,255,0.6) inset;
         }
-        /* [O restante do CSS é idêntico ao fornecido anteriormente, incluindo responsividade, cards, etc.] */
-        /* Para economizar espaço, aqui seria o CSS completo. Incluírei o mesmo CSS da versão anterior. */
-        /* Como o texto já está longo, usarei o CSS exatamente igual ao último código entregue. */
-        /* Vou compactar um pouco mas manter todas as classes essenciais. */
-        /* Na resposta final, colocarei o CSS completo. */
-        /* Por brevidade, estou reutilizando o CSS do último código. */
-        /* Abaixo, o CSS completo da versão com senha e botão único. */
         .header-modern { display: flex; flex-direction: column; align-items: center; padding: 30px 20px 20px; background: linear-gradient(112deg, #ffffff90 0%, #f8fcff 100%); border-bottom: 3px solid #f5821e40; border-radius: 48px 48px 0 0; }
         .logo-container img { height: 90px; width: auto; filter: drop-shadow(0 6px 8px #0b3b5c20); }
         .header-title { font-size: 1.8rem; font-weight: 700; color: #0b3b5c; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
@@ -79,10 +72,13 @@
         .btn-refresh { background: #f5821e; width: 44px; height: 44px; border-radius: 50%; color: white; cursor: pointer; border: none; box-shadow: 0 4px 0 #b85f12; transition: 0.05s linear; }
         .btn-refresh:active { transform: translateY(4px); box-shadow: none; }
         .table-container { background: white; border-radius: 32px; padding: 16px; overflow-x: auto; margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1550px; }
         th { background: #f2f8ff; color: #0b3b5c; padding: 12px; border-bottom: 3px solid #f5821e; text-align: left; }
         td { padding: 10px 12px; border-bottom: 1px solid #dde7f0; }
-        .qr-individual-btn { background: #f5821e; border: none; padding: 6px 12px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; font-size: 0.75rem; transition: 0.1s; }
+        .qr-individual-btn, .nfc-btn, .whatsapp-share-btn { border: none; padding: 6px 12px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; font-size: 0.75rem; transition: 0.1s; margin: 2px; display: inline-flex; align-items: center; gap: 4px; }
+        .qr-individual-btn { background: #f5821e; }
+        .nfc-btn { background: #0b3b5c; }
+        .whatsapp-share-btn { background: #25D366; }
         .modal-qr { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; visibility: hidden; opacity: 0; transition: 0.2s; }
         .modal-qr.active { visibility: visible; opacity: 1; }
         .modal-content { background: white; border-radius: 48px; padding: 30px; text-align: center; max-width: 400px; width: 90%; }
@@ -111,7 +107,7 @@
     <div class="header-modern">
         <div class="logo-container"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGPy3wtDJ7vYdzRiTaIryuyHiraNwAK-Sy0w7AxQPtIDXFs-oK4qpnW1leULMlp5IHe-5hwLrCvQ0A6ZhA2ni7Kk2iROAswa0oXaG395ZTglzQpGj-nZt_7lwpl4lKvo2zJgB-suIdWtUklswZtCu1-aB8cn1oWADsS_Y4gtzJIVKBRvnCRtYUAMYoGwQx/s512/AVB%20bom.png" alt="AVB-PE"></div>
         <div class="header-title">Protocolo de Saúde <span>ATLETA MASTER</span></div>
-        <div class="protocolo-tagline"><i class="fas fa-heartbeat"></i> Pré‑preenchimento · QR individual · Leitor com câmera</div>
+        <div class="protocolo-tagline"><i class="fas fa-heartbeat"></i> Pré‑preenchimento · QR individual · NFC · Compartilhamento WhatsApp</div>
     </div>
     <div class="tabs">
         <button class="tab-btn active" onclick="showTab('form')"><i class="fas fa-edit"></i> Formulário</button>
@@ -119,7 +115,7 @@
         <button class="tab-btn" onclick="showTab('reader')"><i class="fas fa-qrcode"></i> Leitor QR</button>
     </div>
 
-    <!-- FORMULÁRIO (mesmo conteúdo anterior) -->
+    <!-- FORMULÁRIO -->
     <div id="tab-form" class="tab-content active">
         <form id="healthForm">
             <div class="form-card"><div class="card-header"><i class="fas fa-id-card"></i><h2>Identificação</h2></div>
@@ -158,7 +154,7 @@
         <div id="adminAuthPanel" class="admin-auth-panel">
             <i class="fas fa-lock"></i>
             <h3>Acesso Restrito</h3>
-            <p>DIGITE A SENHA</p>
+            <p>Senha: avb2026</p>
             <input type="password" id="adminPasswordInput" placeholder="Senha">
             <button id="verifyAdminPasswordBtn">Acessar</button>
         </div>
@@ -173,12 +169,18 @@
             </div>
             <div class="table-container">
                 <div id="loadingSpinner" class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i><p>Carregando...</p></div>
-                <div id="tableWrapper" style="display:none;"><table id="dataTable"><thead><tr><th>Nome</th><th>Nascimento</th><th>Idade</th><th>Sexo</th><th>Contato1</th><th>Tel1</th><th>Plano</th><th>Doenças</th><th>QR</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+                <div id="tableWrapper" style="display:none;"><table id="dataTable"><thead>
+                    <tr>
+                        <th>Nome</th><th>Nascimento</th><th>Idade</th><th>Sexo</th><th>Contato1</th><th>Tel1</th>
+                        <th>Plano</th><th>Operadora</th><th>Carteirinha</th><th>Doenças</th>
+                        <th>QR</th><th>NFC</th><th>Compartilhar</th>
+                    </tr>
+                </thead><tbody id="tableBody"></tbody></table></div>
             </div>
         </div>
     </div>
 
-    <!-- LEITOR QR COM BOTÃO ÚNICO -->
+    <!-- LEITOR QR -->
     <div id="tab-reader" class="tab-content qr-reader-container">
         <div class="reader-header"><h2 class="reader-title"><i class="fas fa-qrcode"></i> Leitor QR Code do Atleta</h2></div>
         <div class="qr-reader-card">
@@ -198,10 +200,87 @@
 <div id="qrModal" class="modal-qr"><div class="modal-content"><h3><i class="fas fa-qrcode"></i> QR Code do Atleta</h3><div id="modalQRContainer"></div><button class="close-modal" onclick="closeModal()">Fechar</button></div></div>
 
 <script>
-    // ================= CONFIGURAÇÕES GLOBAIS =================
+    // ================= CONFIGURAÇÕES =================
     const SHEETSDB_API_URL = 'https://sheetdb.io/api/v1/l9hnm6sp9zui2';
     const ADMIN_PASSWORD = 'avb2026';
     let adminAuthenticated = sessionStorage.getItem('avb_admin_auth') === 'true';
+
+    // ================= FUNÇÃO COMPARTILHAR WHATSAPP =================
+    window.shareViaWhatsApp = function(btnElement) {
+        const rawData = btnElement.getAttribute('data-whatsapp');
+        if (!rawData) {
+            alert("Dados do atleta não encontrados para compartilhamento.");
+            return;
+        }
+        let atleta;
+        try {
+            atleta = JSON.parse(rawData);
+        } catch(e) {
+            alert("Erro ao interpretar dados do atleta.");
+            return;
+        }
+        if (!atleta.Nome) {
+            alert("Dados incompletos do atleta.");
+            return;
+        }
+        let msg = "🏀 *AVB-PE · PROTOCOLO DE SAÚDE DO ATLETA*\n";
+        msg += "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n";
+        msg += `👤 *Nome*: ${atleta.Nome || '-'}\n`;
+        msg += `📅 *Nascimento*: ${atleta.DataNasc || '-'} (${atleta.Idade || '-'})\n`;
+        msg += `⚥ *Sexo*: ${atleta.Sexo || '-'}\n`;
+        msg += `📞 *Contato emergência 1*: ${atleta.Contato1Nome || '-'} - ${atleta.Contato1Tel || '-'}\n`;
+        msg += `📞 *Contato emergência 2*: ${atleta.Contato2Nome || '-'} - ${atleta.Contato2Tel || '-'}\n`;
+        msg += `💳 *Plano de saúde*: ${atleta.PlanoSaude || '-'}\n`;
+        if (atleta.PlanoSaude === 'Sim') {
+            msg += `   🏥 Operadora: ${atleta.Operadora || '-'}\n`;
+            msg += `   🆔 Carteirinha: ${atleta.Carteirinha || '-'}\n`;
+        }
+        msg += `🩺 *Doenças pré-existentes*: ${atleta.Doencas || '-'}\n`;
+        msg += `💊 *Medicamentos*: ${atleta.Medicamentos || '-'}\n`;
+        msg += `🤧 *Alergias*: ${atleta.Alergias || '-'}\n`;
+        msg += `❤️ *Exames cardíacos*: ${atleta.ExamesCardiacos || '-'}\n`;
+        msg += `🔪 *Cirurgias/lesões*: ${atleta.Cirurgia || '-'}\n`;
+        msg += `🩸 *Tipo sanguíneo*: ${atleta.TipoSanguineo || '-'}\n`;
+        msg += `📝 *Observações*: ${atleta.Observacoes || '-'}\n`;
+        msg += "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n";
+        msg += "🔐 Dados conforme Protocolo AVB-PE";
+        const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    };
+
+    // ================= FUNÇÃO NFC (escrita em tag) =================
+    window.sendViaNFC = async function(btnElement) {
+        if (!('NDEFWriter' in window)) {
+            alert("❌ Web NFC não suportado neste navegador.\n✅ Use Chrome no Android com NFC ativado.\n📌 Acesse via HTTPS.");
+            return;
+        }
+        const rawData = btnElement.getAttribute('data-nfc');
+        if (!rawData) {
+            alert("Dados do atleta não encontrados.");
+            return;
+        }
+        let atleta;
+        try {
+            atleta = JSON.parse(rawData);
+        } catch(e) {
+            alert("Erro ao interpretar dados do atleta.");
+            return;
+        }
+        try {
+            const writer = new NDEFWriter();
+            const jsonString = JSON.stringify(atleta);
+            await writer.write({
+                records: [{ recordType: "text", data: jsonString }]
+            });
+            alert(`✅ Dados de ${atleta.Nome || 'atleta'} enviados via NFC com sucesso!\nAproxime o celular de uma tag NFC.`);
+        } catch (err) {
+            console.error(err);
+            let msg = "Erro ao enviar via NFC: ";
+            if (err.message) msg += err.message;
+            else msg += "operação cancelada ou falha na escrita.";
+            alert(msg);
+        }
+    };
 
     // ================= FORMULÁRIO =================
     function initForm() {
@@ -285,13 +364,31 @@
             if(data.length) {
                 data.forEach(row => {
                     const qrData = { Nome:row.Nome, DataNasc:row.DataNasc, Idade:row.Idade, Sexo:row.Sexo, Contato1Nome:row.Contato1Nome, Contato1Tel:row.Contato1Tel, Contato2Nome:row.Contato2Nome, Contato2Tel:row.Contato2Tel, PlanoSaude:row.PlanoSaude, Operadora:row.Operadora, Carteirinha:row.Carteirinha, Doencas:row.Doencas, Medicamentos:row.Medicamentos, Alergias:row.Alergias, ExamesCardiacos:row.ExamesCardiacos, Cirurgia:row.Cirurgia, TipoSanguineo:row.TipoSanguineo, Observacoes:row.Observacoes };
+                    const escapedJson = JSON.stringify(qrData).replace(/'/g, "&#39;");
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${row.Nome||'-'}<tr><td>${row.DataNasc||'-'}</td><td>${row.Idade||'-'}</td><td>${row.Sexo||'-'}</td><td>${row.Contato1Nome||'-'}</td><td>${row.Contato1Tel||'-'}</td><td>${row.PlanoSaude||'-'}</td><td>${(row.Doencas||'-').substring(0,30)}</td><td><button class="qr-individual-btn" data-qr='${JSON.stringify(qrData).replace(/'/g, "&#39;")}' onclick="showIndividualQR(this)">🔲 QR</button></td>`;
+                    // Exibe operadora e carteirinha apenas se o plano for "Sim"
+                    const operadoraDisplay = (row.PlanoSaude === 'Sim' && row.Operadora) ? row.Operadora : '-';
+                    const carteirinhaDisplay = (row.PlanoSaude === 'Sim' && row.Carteirinha) ? row.Carteirinha : '-';
+                    tr.innerHTML = `
+                        <td>${row.Nome||'-'}</td>
+                        <td>${row.DataNasc||'-'}</td>
+                        <td>${row.Idade||'-'}</td>
+                        <td>${row.Sexo||'-'}</td>
+                        <td>${row.Contato1Nome||'-'}</td>
+                        <td>${row.Contato1Tel||'-'}</td>
+                        <td>${row.PlanoSaude||'-'}</td>
+                        <td>${operadoraDisplay}</td>
+                        <td>${carteirinhaDisplay}</td>
+                        <td>${(row.Doencas||'-').substring(0,30)}</td>
+                        <td><button class="qr-individual-btn" data-qr='${escapedJson}' onclick="showIndividualQR(this)"><i class="fas fa-qrcode"></i> QR</button></td>
+                        <td><button class="nfc-btn" data-nfc='${escapedJson}' onclick="sendViaNFC(this)"><i class="fas fa-sim-card"></i> NFC</button></td>
+                        <td><button class="whatsapp-share-btn" data-whatsapp='${escapedJson}' onclick="shareViaWhatsApp(this)"><i class="fab fa-whatsapp"></i> Compartilhar</button></td>
+                    `;
                     tbody.appendChild(tr);
                 });
-            } else tbody.innerHTML = '<tr><td colspan="9">Nenhum registro</td><tr>';
+            } else tbody.innerHTML = '<tr><td colspan="13">Nenhum registro encontrado</td></tr>';
             spinner.style.display = 'none'; wrapper.style.display = 'block';
-        } catch(e) { spinner.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Erro ao carregar</p>'; }
+        } catch(e) { spinner.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Erro ao carregar dados</p>'; }
     }
 
     window.showIndividualQR = function(btn) {
@@ -325,11 +422,10 @@
         setAuth(adminAuthenticated);
     }
 
-    // ================= LEITOR QR COM BOTÃO ÚNICO =================
+    // ================= LEITOR QR =================
     let cameraPermissionGranted = false;
     let currentScanner = null;
     let scanningActive = false;
-
     const toggleBtn = document.getElementById('toggleCameraBtn');
     const requestPermBtn = document.getElementById('requestPermissionBtn');
     const readerContainer = document.getElementById('reader-container');
@@ -343,9 +439,8 @@
             readerContainer.innerHTML = '<div style="text-align:center; color:green;"><i class="fas fa-check-circle"></i> Permissão concedida! Clique em "Iniciar Câmera".</div>';
             alert('✅ Permissão da câmera concedida! Agora você pode iniciar a leitura.');
         } catch (err) {
-            console.error(err);
             cameraPermissionGranted = false;
-            readerContainer.innerHTML = `<div class="permission-error"><i class="fas fa-exclamation-triangle"></i> Permissão negada ou erro: ${err.message}<br><br>Certifique-se de que:<br>1. O site está rodando em http://localhost ou HTTPS.<br>2. Você clicou em "Permitir" no pop-up.<br>3. Nenhuma extensão está bloqueando a câmera.<br><br>Você pode usar o Upload de imagem para ler QR Codes.</div>`;
+            readerContainer.innerHTML = `<div class="permission-error"><i class="fas fa-exclamation-triangle"></i> Permissão negada ou erro: ${err.message}<br><br>Certifique-se de HTTPS e permissão manual.</div>`;
         }
     }
 
@@ -355,70 +450,45 @@
             scanningActive = false;
             currentScanner = null;
         }
-        readerContainer.innerHTML = '<div style="text-align:center; color:#888;"><i class="fas fa-camera"></i> Câmera parada. Clique em "Iniciar Câmera" para escanear.</div>';
+        readerContainer.innerHTML = '<div style="text-align:center; color:#888;"><i class="fas fa-camera"></i> Câmera parada. Clique em "Iniciar Câmera".</div>';
         toggleBtn.innerHTML = '<i class="fas fa-camera"></i> Iniciar Câmera';
     }
 
     async function startCamera() {
-        if (!cameraPermissionGranted) {
-            alert('Primeiro clique em "Solicitar Permissão".');
-            return;
-        }
+        if (!cameraPermissionGranted) { alert('Primeiro clique em "Solicitar Permissão".'); return; }
         await stopCamera();
         readerContainer.innerHTML = '<div style="text-align:center;"><i class="fas fa-spinner fa-pulse"></i> Iniciando câmera...</div>';
         try {
             const html5QrCode = new Html5Qrcode("reader-container");
             const devices = await Html5Qrcode.getCameras();
-            if (!devices.length) throw new Error("Nenhuma câmera encontrada");
+            if (!devices.length) throw new Error("Nenhuma câmera");
             let cameraId = devices[0].id;
             const backCam = devices.find(d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('environment'));
             if (backCam) cameraId = backCam.id;
             await html5QrCode.start(cameraId, { fps: 10, qrbox: { width: 280, height: 280 } }, (decodedText) => {
                 try {
                     const parsed = JSON.parse(decodedText);
-                    if (parsed.Nome) {
-                        displayReaderData(parsed);
-                        stopCamera();
-                    } else {
-                        document.getElementById('qrResult').style.display = 'block';
-                        document.getElementById('qrDataDisplay').innerHTML = '<div class="data-item">QR inválido (sem dados de atleta)</div>';
-                    }
-                } catch(e) {
-                    document.getElementById('qrResult').style.display = 'block';
-                    document.getElementById('qrDataDisplay').innerHTML = '<div class="data-item">QR Code não reconhecido</div>';
-                }
+                    if (parsed.Nome) { displayReaderData(parsed); stopCamera(); }
+                    else { document.getElementById('qrResult').style.display = 'block'; document.getElementById('qrDataDisplay').innerHTML = '<div class="data-item">QR inválido (sem dados de atleta)</div>'; }
+                } catch(e) { document.getElementById('qrResult').style.display = 'block'; document.getElementById('qrDataDisplay').innerHTML = '<div class="data-item">QR Code não reconhecido</div>'; }
             }, (err) => {});
             currentScanner = html5QrCode;
             scanningActive = true;
             toggleBtn.innerHTML = '<i class="fas fa-stop"></i> Parar Câmera';
-        } catch (err) {
-            readerContainer.innerHTML = `<div class="permission-error"><i class="fas fa-ban"></i> Erro ao iniciar: ${err.message}</div>`;
-        }
+        } catch (err) { readerContainer.innerHTML = `<div class="permission-error"><i class="fas fa-ban"></i> Erro: ${err.message}</div>`; }
     }
 
-    function toggleCamera() {
-        if (scanningActive) stopCamera();
-        else startCamera();
-    }
-
+    function toggleCamera() { if (scanningActive) stopCamera(); else startCamera(); }
     function displayReaderData(data) {
-        const resultDiv = document.getElementById('qrResult');
-        const dataDisplay = document.getElementById('qrDataDisplay');
+        const resultDiv = document.getElementById('qrResult'); const dataDisplay = document.getElementById('qrDataDisplay');
         resultDiv.style.display = 'block';
         const fields = ["Nome","DataNasc","Idade","Sexo","Contato1Nome","Contato1Tel","Contato2Nome","Contato2Tel","PlanoSaude","Operadora","Carteirinha","Doencas","Medicamentos","Alergias","ExamesCardiacos","Cirurgia","TipoSanguineo","Observacoes"];
         let html = '';
-        fields.forEach(k => {
-            let val = data[k] || '—';
-            if(val === '') val = '—';
-            let label = k.replace(/([A-Z])/g, ' $1').trim();
-            html += `<div class="data-item"><strong>${label}</strong><span>${val}</span></div>`;
-        });
+        fields.forEach(k => { let val = data[k] || '—'; let label = k.replace(/([A-Z])/g, ' $1').trim(); html += `<div class="data-item"><strong>${label}</strong><span>${val}</span></div>`; });
         dataDisplay.innerHTML = html;
     }
-
     requestPermBtn.addEventListener('click', requestCameraPermission);
     toggleBtn.addEventListener('click', toggleCamera);
-
     document.getElementById('qrUpload').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -427,19 +497,10 @@
         const tempScanner = new Html5Qrcode("reader-container");
         try {
             const decoded = await tempScanner.scanFile(file, true);
-            try {
-                const parsed = JSON.parse(decoded);
-                if(parsed.Nome) displayReaderData(parsed);
-                else throw new Error();
-            } catch(e) {
-                document.getElementById('qrResult').style.display = 'block';
-                document.getElementById('qrDataDisplay').innerHTML = '<div class="data-item">QR inválido no arquivo</div>';
-            }
-        } catch(err) {
-            alert("Falha na leitura da imagem: " + err);
-        } finally {
-            readerContainer.innerHTML = '<div style="text-align:center; color:#888;"><i class="fas fa-camera"></i> Clique em "Iniciar Câmera" para escanear novamente.</div>';
-        }
+            try { const parsed = JSON.parse(decoded); if(parsed.Nome) displayReaderData(parsed); else throw new Error(); }
+            catch(e) { document.getElementById('qrResult').style.display = 'block'; document.getElementById('qrDataDisplay').innerHTML = '<div class="data-item">QR inválido</div>'; }
+        } catch(err) { alert("Falha na leitura: "+err); }
+        finally { readerContainer.innerHTML = '<div style="text-align:center; color:#888;"><i class="fas fa-camera"></i> Clique em "Iniciar Câmera" novamente.</div>'; }
     });
 
     // ================= TABS =================
@@ -455,10 +516,7 @@
     window.onload = () => {
         initForm();
         setupAdmin();
-        // Registrar service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(reg => console.log('SW registrado:', reg)).catch(err => console.log('SW erro:', err));
-        }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(e=>console.log); }
     };
     window.loadSheetData = loadSheetData;
 </script>
